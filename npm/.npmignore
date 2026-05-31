@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+tmp/
+*.tar.gz
+*.zip
+
+# IDE
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
