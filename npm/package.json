@@ -1,0 +1,40 @@
+{
+  "name": "@oopsunix/wii",
+  "version": "1.0.0",
+  "description": "一条命令，零配置，快速检测本机已安装的开发环境、包管理器和命令行工具",
+  "main": "index.js",
+  "bin": {
+    "wii": "bin/wii.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "keywords": [
+    "cli",
+    "devtools",
+    "development",
+    "environment",
+    "package-manager",
+    "version",
+    "detector"
+  ],
+  "author": "oopsunix",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oopsunix/wii.git"
+  },
+  "homepage": "https://github.com/oopsunix/wii",
+  "engines": {
+    "node": ">=14"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
+}

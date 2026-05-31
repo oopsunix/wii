@@ -1,0 +1,107 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: wii
+    main: ./cmd/wii
+    binary: wii
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+      - freebsd
+      - openbsd
+      - netbsd
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+      - arm
+    goarm:
+      - "7"
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: darwin
+        goarch: arm
+      - goos: linux
+        goarch: "386"
+      - goos: linux
+        goarch: arm
+      - goos: windows
+        goarch: arm
+    ldflags:
+      - -s -w
+      - -X wii/internal/config.Version={{.Version}}
+      - -X wii/internal/config.Commit={{.ShortCommit}}
+      - -X wii/internal/config.Date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: "wii_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+      - goos: freebsd
+        format: tar.gz
+      - goos: openbsd
+        format: tar.gz
+      - goos: netbsd
+        format: tar.gz
+    files:
+      - README*.md
+      - LICENSE
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+      - "^chore:"
+
+release:
+  github:
+    owner: oopsunix
+    name: wii
+  draft: false
+  prerelease: auto
+  name_template: "v{{.Version}}"
+
+brews:
+  - repository:
+      owner: oopsunix
+      name: homebrew-tap
+    directory: Formula
+    homepage: "https://github.com/oopsunix/wii"
+    description: "List installed CLI tools with version detection"
+    license: "MIT"
+    test: |
+      system "#{bin}/wii", "--version"
+    install: |
+      bin.install "wii"
+
+scoops:
+  - repository:
+      owner: oopsunix
+      name: scoop-bucket
+    homepage: "https://github.com/oopsunix/wii"
+    description: "List installed CLI tools with version detection"
+    license: "MIT"
