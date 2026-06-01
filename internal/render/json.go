@@ -53,5 +53,5 @@ func (r *jsonRenderer) Render(devEnvs []model.DevEnv, sections []model.Section) 
 	}
 
 	enc := json.NewEncoder(os.Stdout)
-	enc.Encode(out)
+	_ = enc.Encode(out)
 }

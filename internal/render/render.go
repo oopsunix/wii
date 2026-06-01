@@ -134,20 +134,4 @@ func displayPath(path string, fullPath bool) string {
 	return strings.Replace(path, home, "~", 1)
 }
 
-// max returns the larger of a or b.
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-// repeat returns s repeated n times.
-func repeat(s string, n int) string {
-	var b strings.Builder
-	for i := 0; i < n; i++ {
-		b.WriteString(s)
-	}
-	return b.String()
-}
 

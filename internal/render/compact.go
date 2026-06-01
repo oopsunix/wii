@@ -10,14 +10,11 @@ import (
 
 // ANSI color codes.
 const (
-	colorReset   = "\033[0m"
-	colorBold    = "\033[1m"
-	colorDim     = "\033[2m"
-	colorGreen   = "\033[32m"
-	colorYellow  = "\033[33m"
-	colorBlue    = "\033[34m"
-	colorCyan    = "\033[36m"
-	colorMagenta = "\033[35m"
+	colorReset  = "\033[0m"
+	colorBold   = "\033[1m"
+	colorDim    = "\033[2m"
+	colorGreen  = "\033[32m"
+	colorYellow = "\033[33m"
 )
 
 type compactRenderer struct {
