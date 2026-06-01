@@ -12,7 +12,8 @@ var bsdSystemDirs = []*regexp.Regexp{
 	regexp.MustCompile(`^(/bin|/sbin|/usr/bin|/usr/sbin|/rescue/)`),
 }
 
-var bsdGUISkip = regexp.MustCompile(`^(xdg-open|notify-send|zenity|xterm|xclock|xlogo|xeyes|xcalc|xedit|xman|xclipboard|startx|xinit|gvfs-open)$`)
+// GUISkipRE matches GUI-only executables that must never be probed (probing would launch the GUI).
+var GUISkipRE = regexp.MustCompile(`^(xdg-open|notify-send|zenity|xterm|xclock|xlogo|xeyes|xcalc|xedit|xman|xclipboard|startx|xinit|gvfs-open)$`)
 
 func (p *bsdPlatform) SystemDirs() []*regexp.Regexp {
 	return bsdSystemDirs
@@ -23,7 +24,7 @@ func (p *bsdPlatform) FamilySkip() *regexp.Regexp {
 }
 
 func (p *bsdPlatform) GUISkip() *regexp.Regexp {
-	return bsdGUISkip
+	return GUISkipRE
 }
 
 // New returns the BSD platform implementation.

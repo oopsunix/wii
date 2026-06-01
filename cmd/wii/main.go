@@ -56,6 +56,13 @@ func main() {
 
 	plat := platform.New()
 	scanner := scan.NewScanner(plat)
+
+	// Populate package manager whitelists before scanning
+	ctx := context.Background()
+	for label, names := range provider.ResolveNames(ctx) {
+		scan.SetWhitelist(label, names)
+	}
+
 	result := scanner.ScanPath()
 
 	// Detect development environments
@@ -69,11 +76,28 @@ func main() {
 
 	// Probe tool versions
 	if result.Total > 0 {
-		ctx := context.Background()
-
 		// Phase 1: bulk-query package managers for cached versions
+		fmt.Fprintf(os.Stderr, "Concurrency: %d workers\n", cfg.Batch)
 		fmt.Fprintf(os.Stderr, "Querying package managers...\n")
 		provider.FetchAll(ctx)
+
+		// Phase 1.5: replace PATH-scanned entries with provider-level entries
+		// (e.g. Homebrew formulae instead of individual binaries)
+		if entries := provider.ResolveEntries(ctx); len(entries) > 0 {
+			for source := range entries {
+				filtered := result.Candidates[:0]
+				for _, c := range result.Candidates {
+					if c.Source != source {
+						filtered = append(filtered, c)
+					}
+				}
+				result.Candidates = filtered
+			}
+			for _, es := range entries {
+				result.Candidates = append(result.Candidates, es...)
+			}
+			result.Total = len(result.Candidates)
+		}
 
 		// Phase 2: probe remaining tools in parallel
 		fmt.Fprintf(os.Stderr, "Probing versions...\n")

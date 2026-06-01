@@ -13,7 +13,8 @@ var darwinSystemDirs = []*regexp.Regexp{
 }
 
 var darwinFamilySkip = regexp.MustCompile(`.*-(intel64|arm64)$`)
-var darwinGUISkip = regexp.MustCompile(`^(open|say|pbcopy|pbpaste|screencapture|sips|osascript)$`)
+// GUISkipRE matches GUI-only executables that must never be probed (probing would launch the GUI).
+var GUISkipRE = regexp.MustCompile(`^(open|say|pbcopy|pbpaste|screencapture|sips|osascript|pinentry-mac|iina|orb|orbctl)$`)
 
 func (p *darwinPlatform) SystemDirs() []*regexp.Regexp {
 	return darwinSystemDirs
@@ -24,7 +25,7 @@ func (p *darwinPlatform) FamilySkip() *regexp.Regexp {
 }
 
 func (p *darwinPlatform) GUISkip() *regexp.Regexp {
-	return darwinGUISkip
+	return GUISkipRE
 }
 
 // New returns the macOS platform implementation.
