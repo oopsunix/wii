@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 type jsonRenderer struct {

@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"strings"
 
-	"wii/internal/model"
-	"wii/internal/platform"
+	"github.com/oopsunix/wii/internal/model"
+	"github.com/oopsunix/wii/internal/platform"
 )
 
 // blocklistSuffixes are file suffixes to skip (not CLI tools).

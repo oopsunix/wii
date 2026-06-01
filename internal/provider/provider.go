@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 // Provider defines the interface for a package manager integration.

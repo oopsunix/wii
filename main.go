@@ -7,14 +7,14 @@ import (
 	"os"
 	"runtime"
 
-	"wii/internal/config"
-	"wii/internal/devenv"
-	"wii/internal/model"
-	"wii/internal/platform"
-	"wii/internal/probe"
-	"wii/internal/provider"
-	"wii/internal/render"
-	"wii/internal/scan"
+	"github.com/oopsunix/wii/internal/config"
+	"github.com/oopsunix/wii/internal/devenv"
+	"github.com/oopsunix/wii/internal/model"
+	"github.com/oopsunix/wii/internal/platform"
+	"github.com/oopsunix/wii/internal/probe"
+	"github.com/oopsunix/wii/internal/provider"
+	"github.com/oopsunix/wii/internal/render"
+	"github.com/oopsunix/wii/internal/scan"
 )
 
 func main() {

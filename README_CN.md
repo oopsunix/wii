@@ -57,19 +57,19 @@
 #### macOS / Linux
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/oopsunix/wii/main/install.sh | bash
+curl -fsSL https://github.com/oopsunix/wii/raw/main/install.sh | bash
 ```
 
 #### Windows (PowerShell)
 
 ```powershell
-irm https://raw.githubusercontent.com/oopsunix/wii/main/install.ps1 | iex
+irm https://github.com/oopsunix/wii/raw/main/install.ps1 | iex
 ```
 
 #### Go install
 
 ```bash
-go install github.com/oopsunix/wii/cmd/wii@latest
+go install github.com/oopsunix/wii@latest
 ```
 
 #### npm

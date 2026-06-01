@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 // ANSI color codes.

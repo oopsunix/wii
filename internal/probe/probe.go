@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"wii/internal/model"
-	"wii/internal/provider"
+	"github.com/oopsunix/wii/internal/model"
+	"github.com/oopsunix/wii/internal/provider"
 )
 
 // ProbeVersions probes version strings for all candidates using a bounded worker pool.

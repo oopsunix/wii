@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 // brewPrefixCandidates lists common Homebrew prefix paths in priority order.

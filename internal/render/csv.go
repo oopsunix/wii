@@ -4,7 +4,7 @@ import (
 	"encoding/csv"
 	"os"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 type csvRenderer struct {

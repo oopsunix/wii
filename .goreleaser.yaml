@@ -7,7 +7,7 @@ before:
 
 builds:
   - id: wii
-    main: ./cmd/wii
+    main: .
     binary: wii
     env:
       - CGO_ENABLED=0
@@ -25,9 +25,9 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
-      - -X wii/internal/config.Version={{.Version}}
-      - -X wii/internal/config.Commit={{.ShortCommit}}
-      - -X wii/internal/config.Date={{.Date}}
+      - -X github.com/oopsunix/wii/internal/config.Version={{.Version}}
+      - -X github.com/oopsunix/wii/internal/config.Commit={{.ShortCommit}}
+      - -X github.com/oopsunix/wii/internal/config.Date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 upx:

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 var versionRe = regexp.MustCompile(`([0-9]+\.[0-9]+(\.[0-9]+){0,2})`)

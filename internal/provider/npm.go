@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 type npmProvider struct{}

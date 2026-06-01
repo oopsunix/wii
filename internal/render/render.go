@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strings"
 
-	"wii/internal/model"
+	"github.com/oopsunix/wii/internal/model"
 )
 
 // Renderer defines the interface for output rendering.
