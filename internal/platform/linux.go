@@ -13,7 +13,8 @@ var linuxSystemDirs = []*regexp.Regexp{
 }
 
 var linuxFamilySkip = regexp.MustCompile(`.*-(x86_64|aarch64|i686|armv7l|armhf)$`)
-var linuxGUISkip = regexp.MustCompile(`^(xdg-open|notify-send|zenity|kdialog|gvfs-open|gvfs-mount|gvfs-set-attribute|gvfs-copy|gvfs-move|gvfs-rm|gvfs-mkdir|gvfs-monitor-dir|gvfs-monitor-file|gvfs-ls|gvfs-info|gvfs-cat|gvfs-tree|gvfs-save|gnome-open|kde-open|exo-open|gvfsd|gvfsd-metadata|gnome-terminal|konsole|xterm|gucharmap|gnome-calculator|baobab|eog|evince|gedit|gnome-text-editor|nautilus|totem|yelp|systemctl|journalctl)$`)
+// GUISkipRE matches GUI-only executables that must never be probed (probing would launch the GUI).
+var GUISkipRE = regexp.MustCompile(`^(xdg-open|notify-send|zenity|kdialog|gvfs-open|gvfs-mount|gvfs-set-attribute|gvfs-copy|gvfs-move|gvfs-rm|gvfs-mkdir|gvfs-monitor-dir|gvfs-monitor-file|gvfs-ls|gvfs-info|gvfs-cat|gvfs-tree|gvfs-save|gnome-open|kde-open|exo-open|gvfsd|gvfsd-metadata|gnome-terminal|konsole|xterm|gucharmap|gnome-calculator|baobab|eog|evince|gedit|gnome-text-editor|nautilus|totem|yelp|systemctl|journalctl)$`)
 
 func (p *linuxPlatform) SystemDirs() []*regexp.Regexp {
 	return linuxSystemDirs
@@ -24,7 +25,7 @@ func (p *linuxPlatform) FamilySkip() *regexp.Regexp {
 }
 
 func (p *linuxPlatform) GUISkip() *regexp.Regexp {
-	return linuxGUISkip
+	return GUISkipRE
 }
 
 // New returns the Linux platform implementation.

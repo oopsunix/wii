@@ -23,8 +23,8 @@ var windowsSystemDirs = []*regexp.Regexp{
 // but NOT .exe files in general — on Windows, .exe ARE the executables.
 var windowsFamilySkip = regexp.MustCompile(`.*-(x86_64|i686|aarch64|arm64|armv7l)\.exe$`)
 
-// Skip GUI-only executables that would open windows when probed.
-var windowsGUISkip = regexp.MustCompile(`(?i)^(notepad|calc|mspaint|write|wordpad|charmap|sndrec32|sndvol32|magnify|osk|dvdplay|wmplayer|explorer|control|taskmgr|regedit|mmc|cmd|powershell|msedge|chrome|firefox|iexplore|MicrosoftEdge|hh|winhlp32|` +
+// GUISkipRE matches GUI-only executables that must never be probed (probing would launch the GUI).
+var GUISkipRE = regexp.MustCompile(`(?i)^(notepad|calc|mspaint|write|wordpad|charmap|sndrec32|sndvol32|magnify|osk|dvdplay|wmplayer|explorer|control|taskmgr|regedit|mmc|cmd|powershell|msedge|chrome|firefox|iexplore|MicrosoftEdge|hh|winhlp32|` +
 	// Git GUI tools
 	`git-gui|gitk|` +
 	// Java GUI tools
@@ -55,7 +55,7 @@ func (p *windowsPlatform) FamilySkip() *regexp.Regexp {
 }
 
 func (p *windowsPlatform) GUISkip() *regexp.Regexp {
-	return windowsGUISkip
+	return GUISkipRE
 }
 
 // New returns the Windows platform implementation.

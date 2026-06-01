@@ -3,6 +3,8 @@ package provider
 import (
 	"context"
 	"sync"
+
+	"wii/internal/model"
 )
 
 // Provider defines the interface for a package manager integration.
@@ -62,6 +64,50 @@ func Resolve() []Provider {
 		}
 	}
 	return available
+}
+
+// NamesProvider is optionally implemented by providers that can list
+// their installed package names (for whitelist filtering).
+type NamesProvider interface {
+	Provider
+	FetchNames(ctx context.Context) map[string]bool
+}
+
+// EntryProvider is optionally implemented by providers that generate
+// package-level entries directly (e.g. Homebrew formulae instead of binaries).
+type EntryProvider interface {
+	NamesProvider
+	FetchEntries(ctx context.Context) []model.Tool
+}
+
+// ResolveNames queries all available providers that support name listing
+// and returns a map of provider label -> set of installed names.
+func ResolveNames(ctx context.Context) map[string]map[string]bool {
+	result := make(map[string]map[string]bool)
+	for _, p := range Resolve() {
+		if np, ok := p.(NamesProvider); ok {
+			names := np.FetchNames(ctx)
+			if len(names) > 0 {
+				result[np.Name()] = names
+			}
+		}
+	}
+	return result
+}
+
+// ResolveEntries queries all available providers that support entry generation
+// and returns a map of provider label -> entries.
+func ResolveEntries(ctx context.Context) map[string][]model.Tool {
+	result := make(map[string][]model.Tool)
+	for _, p := range Resolve() {
+		if ep, ok := p.(EntryProvider); ok {
+			entries := ep.FetchEntries(ctx)
+			if len(entries) > 0 {
+				result[ep.Name()] = entries
+			}
+		}
+	}
+	return result
 }
 
 // FetchAll queries all available providers in parallel.

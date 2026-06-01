@@ -56,6 +56,10 @@ var pkgManagerDirPatterns = []struct {
 	{"/.cargo/", "Cargo"},
 	{"/.local/bin", "User Local"},
 
+	// Homebrew (macOS Apple Silicon, Intel, Linuxbrew)
+	{"/homebrew/bin", "Homebrew"},
+	{"/homebrew/homebrew/bin", "Homebrew"},
+
 	// Windows
 	{"/scoop/", "Scoop"},
 	{"/appdata/roaming/npm", "npm Global"},
@@ -95,6 +99,7 @@ func isPkgManagerDir(dir string) (string, bool) {
 }
 
 // pkgManagerWhitelist defines which tools to keep for each package manager.
+// An empty map means keep all tools; a populated map acts as a filter.
 var pkgManagerWhitelist = map[string]map[string]bool{
 	"Cargo": {
 		"cargo":         true,
@@ -102,10 +107,16 @@ var pkgManagerWhitelist = map[string]map[string]bool{
 		"rustup":        true,
 		"rust-analyzer": true,
 	},
+	"Homebrew":       {}, // empty = keep all (brew-installed CLI tools)
 	"npm Global":     {}, // empty = keep all (user-installed npm packages)
 	"Python Scripts": {}, // empty = keep all (pip-installed CLI tools)
 	"Go Tools":       {}, // empty = keep all (go install CLI tools)
 	"winget":         {}, // empty = keep all
+}
+
+// SetWhitelist overrides the tool whitelist for a given package manager label.
+func SetWhitelist(label string, names map[string]bool) {
+	pkgManagerWhitelist[label] = names
 }
 
 // Scanner scans PATH directories for CLI tool candidates.
@@ -145,7 +156,7 @@ func (s *Scanner) ScanPath() model.ScanResult {
 		label := resolveLabel(dir)
 		isPkgManager := label == "Cargo" || label == "Scoop" || label == "npm Global" ||
 			label == "Chocolatey" || label == "Python Scripts" || label == "Go Tools" ||
-			label == "winget" || label == "NuGet"
+			label == "winget" || label == "NuGet" || label == "Homebrew"
 
 		// Skip dev environment dirs only if NOT a package manager
 		if !isPkgManager && isDevEnvDir(dir) {
