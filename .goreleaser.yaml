@@ -16,26 +16,13 @@ builds:
       - linux
       - windows
       - freebsd
-      - openbsd
-      - netbsd
     goarch:
+      - 386
       - amd64
-      - arm64
-      - "386"
       - arm
-    goarm:
-      - "7"
-    ignore:
-      - goos: darwin
-        goarch: "386"
-      - goos: darwin
-        goarch: arm
-      - goos: linux
-        goarch: "386"
-      - goos: linux
-        goarch: arm
-      - goos: windows
-        goarch: arm
+      - arm64
+    flags:
+      - -trimpath
     ldflags:
       - -s -w
       - -X wii/internal/config.Version={{.Version}}
@@ -43,22 +30,17 @@ builds:
       - -X wii/internal/config.Date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
+upx:
+  - ids: [wii]
+    enabled: true
+    goos: ["windows", "linux"]
+    goarch: ["amd64","386"]
+    compress: best
+
 archives:
-  - id: default
-    format: tar.gz
-    name_template: "wii_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    format_overrides:
-      - goos: windows
-        format: zip
-      - goos: freebsd
-        format: tar.gz
-      - goos: openbsd
-        format: tar.gz
-      - goos: netbsd
-        format: tar.gz
-    files:
-      - README*.md
-      - LICENSE
+  - format: binary
+    allow_different_binary_count: true
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
 
 checksum:
   name_template: "checksums.txt"
@@ -69,13 +51,14 @@ snapshot:
 
 changelog:
   sort: asc
-  use: github
   filters:
     exclude:
       - "^docs:"
       - "^test:"
       - "^ci:"
       - "^chore:"
+      - "^*.md"
+      - "^*.ya?ml"
 
 release:
   github:
@@ -84,24 +67,3 @@ release:
   draft: false
   prerelease: auto
   name_template: "v{{.Version}}"
-
-brews:
-  - repository:
-      owner: oopsunix
-      name: homebrew-tap
-    directory: Formula
-    homepage: "https://github.com/oopsunix/wii"
-    description: "List installed CLI tools with version detection"
-    license: "MIT"
-    test: |
-      system "#{bin}/wii", "--version"
-    install: |
-      bin.install "wii"
-
-scoops:
-  - repository:
-      owner: oopsunix
-      name: scoop-bucket
-    homepage: "https://github.com/oopsunix/wii"
-    description: "List installed CLI tools with version detection"
-    license: "MIT"
