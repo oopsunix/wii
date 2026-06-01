@@ -27,7 +27,7 @@ func main() {
 
 	// Handle version flag
 	if *showVersion {
-		fmt.Printf("wii %s\n", config.BuildInfo())
+		fmt.Println(config.BuildInfo())
 		os.Exit(0)
 	}
 
