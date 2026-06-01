@@ -57,7 +57,7 @@
 #### macOS / Linux
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/oopsunix/wii/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/oopsunix/wii/main/install.sh | bash
 ```
 
 #### Windows (PowerShell)
@@ -206,17 +206,11 @@ wii/
 └── README.md
 ```
 
-
+---
 
 ## 贡献
 
 欢迎提交 Issue 和 Pull Request！
-
-1. Fork 本仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
 
 ---
 
@@ -228,7 +222,7 @@ wii/
 
 ---
 
-## 📜 开源协议
+## 开源协议
 
 本项目基于 [Apache License 2.0](LICENSE) 协议开源。
 
