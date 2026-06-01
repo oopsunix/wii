@@ -155,7 +155,7 @@ func readPkgMeta(pkgDir, pkgName string) (version, binName string) {
 	}
 	var pkg struct {
 		Version string      `json:"version"`
-		Bin     interface{} `json:"bin"`
+		Bin     any `json:"bin"`
 	}
 	if json.Unmarshal(data, &pkg) != nil {
 		return "", ""
@@ -166,12 +166,12 @@ func readPkgMeta(pkgDir, pkgName string) (version, binName string) {
 
 // resolveBinName extracts the binary name from the bin field.
 // Prefers the key matching the package name; falls back to the first key.
-func resolveBinName(bin interface{}, pkgName string) string {
+func resolveBinName(bin any, pkgName string) string {
 	base := filepath.Base(pkgName)
 	switch v := bin.(type) {
 	case string:
 		return base
-	case map[string]interface{}:
+	case map[string]any:
 		if _, ok := v[base]; ok {
 			return base
 		}
@@ -193,7 +193,7 @@ func npmPrefix() string {
 }
 
 func (p *npmProvider) parseTextOutput(out string) error {
-	for _, line := range strings.Split(out, "\n") {
+	for line := range strings.SplitSeq(out, "\n") {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "{") || strings.HasPrefix(line, "}") {
 			continue

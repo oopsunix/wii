@@ -13,10 +13,10 @@ type csvRenderer struct {
 
 func (r *csvRenderer) Render(_ []model.DevEnv, sections []model.Section) {
 	w := csv.NewWriter(os.Stdout)
-	w.Write([]string{"name", "version", "path", "source"})
+	_ = w.Write([]string{"name", "version", "path", "source"})
 	for _, sec := range sections {
 		for _, t := range sec.Tools {
-			w.Write([]string{
+			_ = w.Write([]string{
 				t.Name,
 				t.Version,
 				displayPath(t.Path, r.cfg.FullPath),
