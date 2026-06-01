@@ -1,47 +1,124 @@
 # wii (what-is-installed)
 
-一条命令，零配置，快速检测本机已安装的开发环境、包管理器和命令行工具。
+One command, zero configuration. Quickly discover installed development environments, package managers, and CLI tools.
 
-## 安装
+## Installation
 
 ```bash
 npm install -g @oopsunix/wii
 ```
 
-## 使用
+## Usage
 
 ```bash
-# 直接运行
+wii [flags]
+
+Flags:
+  -c          int      Number of concurrent workers (default: CPU count)
+  -format     string   Output format: table, json, csv
+  -no-color            Disable color output
+  -version             Show version information
+  -h                   Show help message
+```
+
+### Examples
+
+```bash
+# Run directly (auto-detect development environments and CLI tools)
 wii
 
-# JSON 输出
+# JSON output
 wii -format json
 
-# CSV 输出
+# CSV output
 wii -format csv
 
-# 禁用颜色输出
+# Disable color output
 wii -no-color
 
-# 设置并发数
+# Set concurrency
 wii -c 20
 
-# 显示版本
+# Show version
 wii -version
 ```
 
-## 功能特性
+### Output Example
 
-- **开发环境检测**：自动识别 Python、Java、Go、Rust、Node.js、.NET 等运行时及版本
-- **包管理器集成**：查询 npm、pip、Cargo、Scoop 等包管理器安装的 CLI 工具
-- **智能分类**：按 User Local、System Local、包管理器自动分组
-- **跨平台支持**：Windows、macOS、Linux 原生支持
+```
+[*] Current development environment
+ ├─ Go                    1.25.0       /opt/homebrew/bin/go
+ ├─ Java                  1.8.0        /Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/bin/java
+ ├─ Node                  23.7.0       /opt/homebrew/bin/node
+ ├─ Rust                  1.95.0       ~/.cargo/bin/rustc
+ ├─ npm                   10.9.2       /opt/homebrew/bin/npm
+ └─ pnpm                  10.17.1      /opt/homebrew/bin/pnpm
 
-## 更多信息
+[*] User Local
+ ├─ uv                    0.8.17       ~/.local/bin/uv
+ └─ acorn                 ?            ~/Library/pnpm/acorn
 
-- [GitHub 仓库](https://github.com/oopsunix/wii)
-- [问题反馈](https://github.com/oopsunix/wii/issues)
+[*] System Local
+ ├─ docker                27.3.1       /usr/local/bin/docker
+ └─ ghostty               1.3.1        /Applications/Ghostty.app/Contents/MacOS/ghostty
 
-## 许可证
+[*] npm Global
+ ├─ @anthropic-ai/claude-code   2.1.159       /opt/homebrew/bin/claude
+ ├─ @google/gemini-cli          0.41.2        /opt/homebrew/bin/gemini
+ └─ @openai/codex               0.125.0       /opt/homebrew/bin/codex
 
-MIT
+[*] Cargo
+ ├─ cargo                 1.95.0       ~/.cargo/bin/cargo
+ └─ rustc                 1.95.0       ~/.cargo/bin/rustc
+
+[*] Homebrew
+ ├─ airbuddy              2.7.3,641    /opt/homebrew/bin/airbuddy
+ ├─ dos2unix              7.5.3        /opt/homebrew/bin/dos2unix
+ └─ goreleaser            2.4.8        /opt/homebrew/bin/goreleaser
+```
+
+## Output Sections
+
+| Section | Description |
+|---------|-------------|
+| **Current development environment** | Installed runtimes, compilers, and package managers |
+| **User Local** | CLI tools in user directories (e.g., `~/.local/bin`) |
+| **System Local** | CLI tools in system-level directories |
+| **npm Global** | Tools installed via `npm install -g` |
+| **Homebrew** | Tools installed via Homebrew |
+| **Go Tools** | Tools installed via `go install` |
+| **Python Scripts** | CLI tools installed via `pip install` |
+| **Cargo** | Tools installed via `cargo install` |
+
+## Features
+
+- **Development Environment Detection**: Automatically identify runtimes like Python, Java, Go, Rust, Node.js, .NET and their versions
+- **Package Manager Integration**: Query CLI tools installed via brew, winget, scoop, npm, pip, Cargo and more
+- **Smart Grouping**: Auto-categorize by User Local, System Local, and package managers
+- **Parallel Probing**: Concurrent version detection across all platforms
+- **Cross-Platform**: Native support for Windows, macOS, and Linux
+- **Live Snapshot**: No disk cache, fresh scan on every run
+
+## Other Installation Methods
+
+```bash
+# macOS / Linux (curl)
+curl -fsSL https://github.com/oopsunix/wii/raw/main/install.sh | bash
+
+# Windows (PowerShell)
+irm https://github.com/oopsunix/wii/raw/main/install.ps1 | iex
+
+# Go install
+go install github.com/oopsunix/wii@latest
+```
+
+Pre-built binaries are also available on [GitHub Releases](https://github.com/oopsunix/wii/releases).
+
+## Links
+
+- [GitHub Repository](https://github.com/oopsunix/wii)
+- [Issue Tracker](https://github.com/oopsunix/wii/issues)
+
+## License
+
+[MIT](https://github.com/oopsunix/wii/blob/main/LICENSE)
