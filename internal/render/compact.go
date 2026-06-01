@@ -38,7 +38,7 @@ func (r *compactRenderer) Render(devEnvs []model.DevEnv, sections []model.Sectio
 	// Dev environment summary
 	if len(installedEnvs) > 0 {
 		r.printDevEnvs(installedEnvs, noColor, nameWidth, verWidth)
-		fmt.Fprintln(os.Stdout)
+		fmt.Println()
 	}
 
 	// Tool sections
@@ -52,7 +52,7 @@ func (r *compactRenderer) Render(devEnvs []model.DevEnv, sections []model.Sectio
 	for i, sec := range sections {
 		r.printSection(sec, noColor, nameWidth, verWidth)
 		if i < len(sections)-1 {
-			fmt.Fprintln(os.Stdout)
+			fmt.Println()
 		}
 	}
 }
@@ -106,9 +106,9 @@ func (r *compactRenderer) printDevEnvs(devEnvs []model.DevEnv, noColor bool, nam
 		path := displayPath(env.Path, r.cfg.FullPath)
 
 		if noColor {
-			fmt.Fprintf(os.Stdout, " %s %-*s %-*s %s\n", connector, nameWidth, env.Name, verWidth, env.Version, path)
+			fmt.Printf(" %s %-*s %-*s %s\n", connector, nameWidth, env.Name, verWidth, env.Version, path)
 		} else {
-			fmt.Fprintf(os.Stdout, " %s%s%s %s%-*s%s %s%-*s%s %s%s%s\n",
+			fmt.Printf(" %s%s%s %s%-*s%s %s%-*s%s %s%s%s\n",
 				colorDim, connector, colorReset,
 				colorBold, nameWidth, env.Name, colorReset,
 				colorGreen, verWidth, env.Version, colorReset,
@@ -133,13 +133,13 @@ func (r *compactRenderer) printSection(sec model.Section, noColor bool, nameWidt
 		path := displayPath(t.Path, r.cfg.FullPath)
 
 		if noColor {
-			fmt.Fprintf(os.Stdout, " %s %-*s %-*s %s\n", connector, nameWidth, name, verWidth, t.Version, path)
+			fmt.Printf(" %s %-*s %-*s %s\n", connector, nameWidth, name, verWidth, t.Version, path)
 		} else {
 			vColor := colorGreen
 			if t.Version == "?" || t.Version == "" {
 				vColor = colorYellow
 			}
-			fmt.Fprintf(os.Stdout, " %s%s%s %s%-*s%s %s%-*s%s %s%s%s\n",
+			fmt.Printf(" %s%s%s %s%-*s%s %s%-*s%s %s%s%s\n",
 				colorDim, connector, colorReset,
 				colorBold, nameWidth, name, colorReset,
 				vColor, verWidth, t.Version, colorReset,
@@ -151,9 +151,9 @@ func (r *compactRenderer) printSection(sec model.Section, noColor bool, nameWidt
 
 func (r *compactRenderer) printHeader(title string, noColor bool) {
 	if noColor {
-		fmt.Fprintf(os.Stdout, "[*] %s\n", title)
+		fmt.Printf("[*] %s\n", title)
 	} else {
-		fmt.Fprintf(os.Stdout, "%s[*]%s %s%s%s\n",
+		fmt.Printf("%s[*]%s %s%s%s\n",
 			colorBold, colorReset,
 			colorBold, title, colorReset,
 		)
@@ -162,9 +162,9 @@ func (r *compactRenderer) printHeader(title string, noColor bool) {
 
 func (r *compactRenderer) printLine(text string, noColor bool, color string) {
 	if noColor || color == "" {
-		fmt.Fprintf(os.Stdout, "  %s\n", text)
+		fmt.Printf("  %s\n", text)
 	} else {
-		fmt.Fprintf(os.Stdout, "  %s%s%s\n", color, text, colorReset)
+		fmt.Printf("  %s%s%s\n", color, text, colorReset)
 	}
 }
 
