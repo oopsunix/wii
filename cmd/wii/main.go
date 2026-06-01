@@ -59,7 +59,8 @@ func main() {
 
 	// Populate package manager whitelists before scanning
 	ctx := context.Background()
-	for label, names := range provider.ResolveNames(ctx) {
+	allNames := provider.ResolveNames(ctx)
+	for label, names := range allNames {
 		scan.SetWhitelist(label, names)
 	}
 
