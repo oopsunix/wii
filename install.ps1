@@ -18,44 +18,45 @@ if ([Environment]::Is64BitOperatingSystem) {
 
 Write-Success "Detected: windows/$Arch"
 
-# Get latest version from GitHub API
-Write-Host "Fetching latest version..."
+# Construct download URL (goreleaser produces raw binaries without version in filename)
+$Filename = "${BinaryName}_windows_${Arch}.exe"
+$Url = "https://github.com/$Repo/releases/latest/download/$Filename"
+$MirrorPrefix = "https://hubp.llkk.cc/"
+$TmpFile = "$env:TEMP\${BinaryName}.exe"
+
+# Check GitHub accessibility, fall back to mirror if unreachable
+Write-Host "Checking GitHub connectivity..."
 try {
-    $Release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" -UseBasicParsing
-    $Version = $Release.tag_name.TrimStart('v')
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $Request = [System.Net.WebRequest]::Create("https://github.com")
+    $Request.Timeout = 10000
+    $Request.Method = "HEAD"
+    $Response = $Request.GetResponse()
+    $Response.Close()
 } catch {
-    Write-Error "Error: Could not fetch latest version"
-    Write-Host "Please visit: https://github.com/$Repo/releases"
-    exit 1
+    Write-Warning "GitHub unreachable, using mirror..."
+    $Url = "${MirrorPrefix}${Url}"
 }
-
-Write-Success "Latest version: v$Version"
-
-# Construct download URL
-$Filename = "${BinaryName}_${Version}_windows_${Arch}"
-$Url = "https://github.com/$Repo/releases/download/v$Version/${Filename}.zip"
-$TmpZip = "$env:TEMP\${BinaryName}.zip"
 
 # Download
 Write-Host "Downloading $Url..."
 try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Invoke-WebRequest -Uri $Url -OutFile $TmpZip -UseBasicParsing
+    Invoke-WebRequest -Uri $Url -OutFile $TmpFile -UseBasicParsing
 } catch {
     Write-Error "Error: Download failed"
     Write-Host $_.Exception.Message
     exit 1
 }
 
-# Extract and install
+# Install
 Write-Host "Installing to $InstallDir..."
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
 
 try {
-    Expand-Archive -Path $TmpZip -DestinationPath $InstallDir -Force
-    Remove-Item $TmpZip -Force
+    Move-Item -Path $TmpFile -Destination "$InstallDir\$BinaryName.exe" -Force
 } catch {
-    Write-Error "Error: Extraction failed"
+    Write-Error "Error: Installation failed"
     Write-Host $_.Exception.Message
     exit 1
 }

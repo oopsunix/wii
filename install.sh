@@ -40,27 +40,27 @@ esac
 
 echo -e "${GREEN}Detected: ${OS}/${ARCH}${NC}"
 
-# Get latest version from GitHub API
-echo "Fetching latest version..."
-VERSION=$(curl -sL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/')
+# Construct download URL (goreleaser produces raw binaries without version in filename)
+FILENAME="${BINARY_NAME}_${OS}_${ARCH}"
+URL="https://github.com/${REPO}/releases/latest/download/${FILENAME}"
+MIRROR_PREFIX="https://hubp.llkk.cc/"
+TMP_FILE="/tmp/${BINARY_NAME}"
 
-if [ -z "$VERSION" ]; then
-    echo -e "${RED}Error: Could not fetch latest version${NC}"
-    echo "Falling back to manual download..."
-    echo "Please visit: https://github.com/${REPO}/releases"
-    exit 1
-fi
-
-echo -e "${GREEN}Latest version: v${VERSION}${NC}"
-
-# Construct download URL
-FILENAME="${BINARY_NAME}_${VERSION}_${OS}_${ARCH}"
-if [ "$OS" = "windows" ]; then
-    URL="https://github.com/${REPO}/releases/download/v${VERSION}/${FILENAME}.zip"
-    TMP_FILE="/tmp/${BINARY_NAME}.zip"
+# Check GitHub accessibility, fall back to mirror if unreachable
+echo "Checking GitHub connectivity..."
+if command -v curl &> /dev/null; then
+    if ! curl -sL --connect-timeout 5 --max-time 10 -o /dev/null "https://github.com" 2>/dev/null; then
+        echo -e "${YELLOW}GitHub unreachable, using mirror...${NC}"
+        URL="${MIRROR_PREFIX}${URL}"
+    fi
+elif command -v wget &> /dev/null; then
+    if ! wget -q --timeout=10 --spider "https://github.com" 2>/dev/null; then
+        echo -e "${YELLOW}GitHub unreachable, using mirror...${NC}"
+        URL="${MIRROR_PREFIX}${URL}"
+    fi
 else
-    URL="https://github.com/${REPO}/releases/download/v${VERSION}/${FILENAME}.tar.gz"
-    TMP_FILE="/tmp/${BINARY_NAME}.tar.gz"
+    echo -e "${RED}Error: Neither curl nor wget found${NC}"
+    exit 1
 fi
 
 # Download
@@ -69,24 +69,13 @@ if command -v curl &> /dev/null; then
     curl -sL "$URL" -o "$TMP_FILE"
 elif command -v wget &> /dev/null; then
     wget -q "$URL" -O "$TMP_FILE"
-else
-    echo -e "${RED}Error: Neither curl nor wget found${NC}"
-    exit 1
 fi
 
-# Extract and install
+# Install
 echo "Installing to ${INSTALL_DIR}..."
 mkdir -p "$INSTALL_DIR"
-
-if [ "$OS" = "windows" ]; then
-    unzip -o "$TMP_FILE" -d "$INSTALL_DIR"
-    rm "$TMP_FILE"
-else
-    tar xzf "$TMP_FILE" -C /tmp
-    mv "/tmp/${BINARY_NAME}" "${INSTALL_DIR}/${BINARY_NAME}"
-    chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
-    rm "$TMP_FILE"
-fi
+mv "$TMP_FILE" "${INSTALL_DIR}/${BINARY_NAME}"
+chmod +x "${INSTALL_DIR}/${BINARY_NAME}"
 
 echo -e "${GREEN}Installed: ${INSTALL_DIR}/${BINARY_NAME}${NC}"
 
