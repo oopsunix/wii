@@ -89,10 +89,11 @@ npm install -g @oopsunix/wii
 wii [flags]
 
 Flags:
-  -c          int      并发数 (默认: CPU 核心数)
-  -format     string   Json/CSV输出
-  -no-color   string   禁用颜色输出
-  -h                   显示帮助信息
+  -c     int      并发数 (默认: CPU 核心数)
+  -f     string   输出格式: table, json, csv
+  -nc             禁用颜色输出
+  -v              显示版本信息
+  -h              显示帮助信息
 ```
 ### 使用示例
 
@@ -101,13 +102,16 @@ Flags:
 wii
 
 # JSON 输出
-wii -format json
+wii -f json
 
 # CSV 输出
-wii -format csv
+wii -f csv
 
 # 禁用颜色输出
-wii -no-color
+wii -nc
+
+# 显示版本
+wii -v
 
 # 检测并发数
 wii -c 20

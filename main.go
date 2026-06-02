@@ -15,21 +15,32 @@ import (
 	"github.com/oopsunix/wii/internal/provider"
 	"github.com/oopsunix/wii/internal/render"
 	"github.com/oopsunix/wii/internal/scan"
+	"github.com/oopsunix/wii/internal/update"
 )
 
 func main() {
 	// Command line flags
-	format := flag.String("format", "table", "Output format: table, json, csv")
-	noColor := flag.Bool("no-color", false, "Disable color output")
+	format := flag.String("f", "table", "Output format: table, json, csv")
+	noColor := flag.Bool("nc", false, "Disable color output")
 	concurrency := flag.Int("c", runtime.NumCPU(), "Number of concurrent workers")
-	showVersion := flag.Bool("version", false, "Show version information")
+	showVersion := flag.Bool("v", false, "Show version information")
 	flag.Parse()
 
-	// Handle version flag
 	if *showVersion {
-		fmt.Println(config.BuildInfo())
+		fmt.Println(config.Version)
 		os.Exit(0)
 	}
+
+	fmt.Fprintln(os.Stderr, config.BuildInfo())
+
+	// Async update check
+	updateDone := make(chan update.Result, 1)
+	go func() {
+		updateDone <- update.CheckAndUpdate()
+	}()
+	defer func() {
+		printUpdateResult(<-updateDone)
+	}()
 
 	// Build config
 	cfg := &model.Config{
@@ -113,4 +124,18 @@ func main() {
 
 	renderer := render.New(cfg)
 	renderer.Render(devEnvs, sections)
+}
+
+func printUpdateResult(r update.Result) {
+	if !r.OK {
+		if r.Err != nil {
+			fmt.Fprintf(os.Stderr, "Update check failed: %v\n", r.Err)
+		}
+		return
+	}
+	if r.Manual {
+		fmt.Fprintf(os.Stderr, "New version %s available, please download manually: https://github.com/oopsunix/wii/releases\n", r.Version)
+		return
+	}
+	fmt.Fprintf(os.Stderr, "Updated to %s, please restart to apply.\n", r.Version)
 }

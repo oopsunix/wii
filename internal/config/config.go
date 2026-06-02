@@ -1,5 +1,7 @@
 package config
 
+import "fmt"
+
 // Version information set at build time via ldflags.
 var (
 	// Version is the current version of the program.
@@ -12,7 +14,7 @@ var (
 	Date = "unknown"
 )
 
-// BuildInfo returns the full version string.
+// BuildInfo returns the full version string in the format: version-commit(date).
 func BuildInfo() string {
-	return Version
+	return fmt.Sprintf("%s-%s(%s)", Version, Commit, Date)
 }

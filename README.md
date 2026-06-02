@@ -89,11 +89,11 @@ Download pre-built binaries from [GitHub Releases](https://github.com/oopsunix/w
 wii [flags]
 
 Flags:
-  -c          int      Number of concurrent workers (default: CPU count)
-  -format     string   Output format: table, json, csv
-  -no-color            Disable color output
-  -version             Show version information
-  -h                   Show help message
+  -c     int      Number of concurrent workers (default: CPU count)
+  -f     string   Output format: table, json, csv
+  -nc             Disable color output
+  -v              Show version information
+  -h              Show help message
 ```
 
 ### Examples
@@ -103,19 +103,19 @@ Flags:
 wii
 
 # JSON output
-wii -format json
+wii -f json
 
 # CSV output
-wii -format csv
+wii -f csv
 
 # Disable color output
-wii -no-color
+wii -nc
+
+# Show version
+wii -v
 
 # Set concurrency
 wii -c 20
-
-# Show version
-wii -version
 ```
 
 ### Output Example
