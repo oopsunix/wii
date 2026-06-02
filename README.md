@@ -11,7 +11,8 @@
 </p>
 
 <p align="center">
-<strong>English</strong> | <a href="README_CN.md">中文</a>
+  <a href="README.md">English</a> •
+  <a href="README_CN.md">中文</a>
 </p>
 
 ---
@@ -166,52 +167,6 @@ wii -version
 | **npm Global** | Tools installed via `npm install -g` |
 | **Scoop** | Tools installed via Scoop package manager |
 | **Cargo** | Tools installed via `cargo install` |
-
-
-
-
-## Project Structure
-
-```
-wii/
-├── cmd/
-│   └── wii/
-│       └── main.go              # Entry point
-├── internal/
-│   ├── config/
-│   │   └── config.go            # Version configuration
-│   ├── devenv/
-│   │   └── devenv.go            # Development environment detection
-│   ├── model/
-│   │   └── model.go             # Data model definitions
-│   ├── platform/
-│   │   ├── platform.go          # Platform interface
-│   │   ├── windows.go           # Windows platform implementation
-│   │   ├── darwin.go            # macOS platform implementation
-│   │   ├── linux.go             # Linux platform implementation
-│   │   └── bsd.go               # BSD platform implementation
-│   ├── probe/
-│   │   ├── probe.go             # Version probing logic
-│   │   └── version.go           # Version extraction
-│   ├── provider/
-│   │   ├── provider.go          # Package manager interface
-│   │   ├── npm.go               # npm support
-│   │   ├── pip.go               # pip support
-│   │   ├── cargo.go             # Cargo support
-│   │   └── ...                  # Other package managers
-│   ├── render/
-│   │   ├── render.go            # Render interface
-│   │   ├── compact.go           # Compact format renderer
-│   │   ├── json.go              # JSON renderer
-│   │   └── csv.go               # CSV renderer
-│   └── scan/
-│       ├── scan.go              # PATH scanning logic
-│       ├── path_windows.go      # Windows path handling
-│       └── path_unix.go         # Unix path handling
-├── go.mod
-├── go.sum
-└── README.md
-```
 
 ---
 

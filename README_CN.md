@@ -11,7 +11,8 @@
 </p>
 
 <p align="center">
-<a href="README.md">English</a> | <strong>中文</strong>
+  <a href="README.md">English</a> •
+  <a href="README_CN.md">中文</a>
 </p>
 
 ---
@@ -88,7 +89,7 @@ npm install -g @oopsunix/wii
 wii [flags]
 
 Flags:
-  -c          int      并发数 (默认 = CPU count)
+  -c          int      并发数 (默认: CPU 核心数)
   -format     string   Json/CSV输出
   -no-color   string   禁用颜色输出
   -h                   显示帮助信息
@@ -161,50 +162,6 @@ wii -c 20
 | **npm Global** | `npm install -g` 安装的工具 |
 | **Scoop** | Scoop 包管理器安装的工具 |
 | **Cargo** | `cargo install` 安装的工具 |
-
-
-
-
-## 项目结构
-
-```
-wii/
-├── cmd/
-│   └── wii/
-│       └── main.go              # 程序入口
-├── internal/
-│   ├── devenv/
-│   │   └── devenv.go            # 开发环境检测
-│   ├── model/
-│   │   └── model.go             # 数据模型定义
-│   ├── platform/
-│   │   ├── platform.go          # 平台接口
-│   │   ├── windows.go           # Windows 平台实现
-│   │   ├── darwin.go            # macOS 平台实现
-│   │   ├── linux.go             # Linux 平台实现
-│   │   └── bsd.go               # BSD 平台实现
-│   ├── probe/
-│   │   ├── probe.go             # 版本探测逻辑
-│   │   └── version.go           # 版本号提取
-│   ├── provider/
-│   │   ├── provider.go          # 包管理器接口
-│   │   ├── npm.go               # npm 支持
-│   │   ├── pip.go               # pip 支持
-│   │   ├── cargo.go             # Cargo 支持
-│   │   └── ...                  # 其他包管理器
-│   ├── render/
-│   │   ├── render.go            # 渲染接口
-│   │   ├── compact.go           # 紧凑格式渲染
-│   │   ├── json.go              # JSON 渲染
-│   │   └── csv.go               # CSV 渲染
-│   └── scan/
-│       ├── scan.go              # PATH 扫描逻辑
-│       ├── path_windows.go      # Windows 路径处理
-│       └── path_unix.go         # Unix 路径处理
-├── go.mod
-├── go.sum
-└── README.md
-```
 
 ---
 
