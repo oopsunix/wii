@@ -60,10 +60,14 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Sync version and publish
-        working-directory: npm
+      - name: Download release binaries
+        run: gh release download "${GITHUB_REF_NAME}" -D dist --pattern "wii_*"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish platform and main packages
         run: |
           npm --version
-          VERSION="${GITHUB_REF_NAME#v}"
-          npm version "$VERSION" --no-git-tag-version
-          npm publish --access public
+          VERSION="${GITHUB_REF_NAME#v}" node .github/scripts/publish-npm.mjs
+        env:
+          DIST_DIR: dist

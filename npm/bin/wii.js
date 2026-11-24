@@ -4,14 +4,23 @@ const { execFileSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 
-const binDir = __dirname;
+const pkgName = `@oopsunix/wii-${process.platform}-${process.arch}`;
 const binaryName = process.platform === "win32" ? "wii.exe" : "wii";
-const binaryPath = path.join(binDir, binaryName);
+const binaryRelPath = `bin/${binaryName}`;
 
-if (!fs.existsSync(binaryPath)) {
-  console.error("Binary not found. Please reinstall the package:");
-  console.error("  npm install -g @oopsunix/wii");
-  process.exit(1);
+let binaryPath;
+try {
+  binaryPath = require.resolve(`${pkgName}/${binaryRelPath}`);
+} catch {
+  const fallback = path.join(__dirname, binaryName);
+  if (fs.existsSync(fallback)) {
+    binaryPath = fallback;
+  } else {
+    console.error(`Unsupported platform or missing binary package (${pkgName}).`);
+    console.error("Please reinstall @oopsunix/wii or download manually from:");
+    console.error("  https://github.com/oopsunix/wii/releases");
+    process.exit(1);
+  }
 }
 
 const args = process.argv.slice(2);

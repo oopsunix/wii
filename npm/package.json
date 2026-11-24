@@ -1,6 +1,6 @@
 {
   "name": "@oopsunix/wii",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "One command, zero configuration. Quickly discover installed development environments, package managers, and CLI tools.",
   "author": "oopsunix",
   "homepage": "https://github.com/oopsunix/wii",
@@ -8,29 +8,21 @@
   "bin": {
     "wii": "bin/wii.js"
   },
-  "scripts": {
-    "postinstall": "node install.js"
-  },
-  "engines": {
-    "node": ">=16"
-  },
-  "os": [
-    "darwin",
-    "linux",
-    "win32"
-  ],
-  "cpu": [
-    "x64",
-    "arm64"
-  ],
   "files": [
     "bin/wii.js",
-    "install.js",
     "README.md"
   ],
+  "optionalDependencies": {
+    "@oopsunix/wii-darwin-arm64": "npm:@oopsunix/wii@1.0.2-darwin-arm64",
+    "@oopsunix/wii-darwin-x64": "npm:@oopsunix/wii@1.0.2-darwin-x64",
+    "@oopsunix/wii-linux-arm64": "npm:@oopsunix/wii@1.0.2-linux-arm64",
+    "@oopsunix/wii-linux-x64": "npm:@oopsunix/wii@1.0.2-linux-x64",
+    "@oopsunix/wii-win32-arm64": "npm:@oopsunix/wii@1.0.2-win32-arm64",
+    "@oopsunix/wii-win32-x64": "npm:@oopsunix/wii@1.0.2-win32-x64"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/oopsunix/wii.git"
+    "url": "git+https://github.com/oopsunix/wii.git"
   },
   "keywords": [
     "cli",
