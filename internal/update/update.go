@@ -60,7 +60,7 @@ func checkAndDownload() Result {
 	if err != nil {
 		return Result{Err: err}
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return Result{Err: fmt.Errorf("GitHub API returned %d", resp.StatusCode)}
@@ -99,7 +99,7 @@ func checkAndDownload() Result {
 
 	dlClient := &http.Client{Timeout: 60 * time.Second}
 	if err := downloadFile(dlClient, downloadURL, tmpPath); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return Result{Version: latest, Err: err}
 	}
 
@@ -111,7 +111,7 @@ func downloadFile(client *http.Client, url, dest string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("download returned %d", resp.StatusCode)
@@ -121,10 +121,12 @@ func downloadFile(client *http.Client, url, dest string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
-	_, err = io.Copy(f, resp.Body)
-	return err
+	if _, err = io.Copy(f, resp.Body); err != nil {
+		_ = f.Close()
+		return err
+	}
+	return f.Close()
 }
 
 func replaceBinary() error {
@@ -140,7 +142,7 @@ func replaceBinary() error {
 	oldPath := exePath + ".old"
 
 	// Clean up leftover files from previous attempts
-	os.Remove(oldPath)
+	_ = os.Remove(oldPath)
 
 	// Try direct rename (atomic on Unix, may fail on Windows due to file lock)
 	if err := os.Rename(tmpPath, exePath); err == nil {
@@ -149,12 +151,12 @@ func replaceBinary() error {
 
 	// Fallback: rename running binary out of the way, then move new one in
 	if err := os.Rename(exePath, oldPath); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("cannot replace binary: %w", err)
 	}
 	if err := os.Rename(tmpPath, exePath); err != nil {
 		// Restore original
-		os.Rename(oldPath, exePath)
+		_ = os.Rename(oldPath, exePath)
 		return fmt.Errorf("cannot move new binary: %w", err)
 	}
 
@@ -178,7 +180,7 @@ func isNewer(current, latest string) bool {
 func parseVersion(v string) [3]int {
 	var parts [3]int
 	for i, s := range strings.SplitN(v, ".", 3) {
-		fmt.Sscanf(s, "%d", &parts[i])
+		_, _ = fmt.Sscanf(s, "%d", &parts[i])
 	}
 	return parts
 }
